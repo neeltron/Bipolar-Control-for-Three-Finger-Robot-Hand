@@ -1,0 +1,57 @@
+Wed Jun 25 11:27:47 2025
+WARNING: mju_openResource: unknown file 'shadow_hand/scene_right.xml'
+
+Wed Jun 25 11:29:40 2025
+ERROR: mjv_updateSceneState: m->nu changed
+
+Wed Jun 25 11:38:25 2025
+ERROR: mjv_updateSceneState: m->nu changed
+
+Wed Jun 25 12:25:12 2025
+ERROR: mjv_updateSceneState: m->nu changed
+
+Wed Jun 25 12:34:46 2025
+ERROR: mjv_updateSceneState: m->nu changed
+
+Wed Jun 25 12:47:16 2025
+ERROR: mjv_updateSceneState: m->nu changed
+
+Wed Jun 25 12:54:24 2025
+ERROR: mjv_updateSceneState: m->nu changed
+
+Wed Jun 25 13:31:26 2025
+ERROR: mjv_updateSceneState: m->nu changed
+
+Wed Jun 25 13:41:59 2025
+ERROR: mjv_updateSceneState: m->nu changed
+
+Wed Jun 25 13:48:58 2025
+ERROR: mjv_updateSceneState: m->nu changed
+
+Wed Jun 25 13:55:08 2025
+ERROR: mjv_updateSceneState: m->nu changed
+
+Wed Jun 25 14:03:06 2025
+ERROR: mjv_updateSceneState: m->nu changed
+
+Wed Jun 25 14:05:17 2025
+ERROR: mjv_updateSceneState: m->nu changed
+
+Wed Jun 25 14:06:52 2025
+ERROR: mjv_updateSceneState: m->nu changed
+
+Wed Jun 25 14:12:56 2025
+ERROR: mjv_updateSceneState: m->nu changed
+
+Wed Jun 25 15:00:52 2025
+ERROR: mjv_updateSceneState: m->nu changed
+
+Wed Jun 25 15:10:29 2025
+ERROR: mjv_updateSceneState: m->nu changed
+
+Wed Jun 25 15:14:56 2025
+ERROR: mjv_updateSceneState: m->nu changed
+
+Thu Jun 26 14:23:57 2025
+ERROR: mjv_updateSceneState: m->nu changed
+
