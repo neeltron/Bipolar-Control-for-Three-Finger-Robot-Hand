@@ -22,6 +22,8 @@ while queue:
     model.body_gravcomp[bid] = 1.0
     queue.extend([i for i in range(model.nbody) if model.body_parentid[i] == bid])
 
+# js1 = middle, js2 = thumb, js3 = index
+
 thumb_ids  = [mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, n) for n in ("rh_A_THJ4", "rh_A_THJ2", "rh_A_THJ1")]
 index_ids  = [mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, n) for n in ("rh_A_FFJ4", "rh_A_FFJ3", "rh_A_FFJ0")]
 middle_ids = [mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, n) for n in ("rh_A_MFJ4", "rh_A_MFJ3", "rh_A_MFJ0")]
@@ -36,6 +38,7 @@ initial_quat = data.qpos[ROOT_QPOS+3:ROOT_QPOS+7].copy()
 target_z   = float(initial_pos[2])
 last_pos   = initial_pos.copy()
 rotation_mode = False
+control_mode = 1
 
 port = serial.Serial("COM7", 9600, timeout=0.005)
 pygame.init()
@@ -47,10 +50,21 @@ MOVE_STEP_XY = 0.002
 MOVE_STEP_Z  = 0.002
 ROT_STEP     = np.deg2rad(0.5)
 
-
 def map_axis(val, mj_id, invert=False):
     lo, hi = model.actuator_ctrlrange[mj_id]
-    return lo + (hi - lo) * ((1023-val)/1023 if invert else val/1023)
+    ctrl = lo + (hi - lo) * ((1023-val)/1023 if invert else val/1023)
+    return max(lo, min(hi, ctrl))
+
+def map_bipolar_discrete(val, mj_id):
+    lo, hi = model.actuator_ctrlrange[mj_id]
+    mid = 512
+    step = (hi - lo) / 2
+    if val > mid + 100:
+        return hi
+    elif val < mid - 100:
+        return lo
+    else:
+        return lo + step
 
 def small_quat(axis, angle):
     axis = np.asarray(axis, dtype=float)
@@ -74,12 +88,29 @@ with viewer.launch_passive(model, data) as v:
         if pkt:
             try:
                 x1,y1,b1,x2,y2,b2,x3,y3,b3 = map(int, pkt.split(','))
-                data.ctrl[thumb_ids[0]] = map_axis(y1, thumb_ids[0])
-                data.ctrl[thumb_ids[1]] = map_axis(x1, thumb_ids[1])
-                data.ctrl[index_ids[0]] = map_axis(y2, index_ids[0])
-                data.ctrl[index_ids[1]] = map_axis(x2, index_ids[1])
-                data.ctrl[middle_ids[0]] = map_axis(y3, middle_ids[0])
-                data.ctrl[middle_ids[1]] = map_axis(x3, middle_ids[1])
+
+                if control_mode == 1:
+                    data.ctrl[middle_ids[0]] = map_axis(y1, middle_ids[0])
+                    data.ctrl[middle_ids[1]] = map_axis(x1, middle_ids[1])
+                    data.ctrl[thumb_ids[0]]  = map_axis(y3, thumb_ids[0])
+                    data.ctrl[thumb_ids[1]]  = map_axis(x3, thumb_ids[1])
+                    data.ctrl[index_ids[0]]  = map_axis(y2, index_ids[0])
+                    data.ctrl[index_ids[1]]  = map_axis(x2, index_ids[1])
+                    data.ctrl[thumb_ids[2]]  = map_axis(x3, thumb_ids[2])
+                    data.ctrl[index_ids[2]]  = map_axis(x2, index_ids[2])
+                    data.ctrl[middle_ids[2]] = map_axis(x1, middle_ids[2])
+                elif control_mode == 2:
+                    data.ctrl[middle_ids[2]] = model.actuator_ctrlrange[middle_ids[2]][0]
+                    data.ctrl[thumb_ids[2]]  = model.actuator_ctrlrange[thumb_ids[2]][0]
+                    data.ctrl[index_ids[2]]  = model.actuator_ctrlrange[index_ids[2]][0]
+
+                    # Applied bipolar control
+                    data.ctrl[middle_ids[0]] = map_bipolar_discrete(y1, middle_ids[0])
+                    data.ctrl[middle_ids[1]] = map_bipolar_discrete(x1, middle_ids[1])
+                    data.ctrl[thumb_ids[0]]  = map_bipolar_discrete(y3, thumb_ids[0])
+                    data.ctrl[thumb_ids[1]]  = map_bipolar_discrete(x3, thumb_ids[1])
+                    data.ctrl[index_ids[0]]  = map_bipolar_discrete(y2, index_ids[0])
+                    data.ctrl[index_ids[1]]  = map_bipolar_discrete(x2, index_ids[1])
             except ValueError:
                 print("Bad packet:", pkt)
 
@@ -96,9 +127,14 @@ with viewer.launch_passive(model, data) as v:
                     target_z  = float(data.qpos[ROOT_QPOS+2])
                     last_pos  = data.qpos[ROOT_QPOS:ROOT_QPOS+3].copy()
                     print("Translation")
+                if e.key == pygame.K_1:
+                    control_mode = 1
+                    print("Normal")
+                if e.key == pygame.K_2:
+                    control_mode = 2
+                    print("Bipolar Discrete")
 
         keys = pygame.key.get_pressed()
-
         data.qvel[ROOT_QVEL:ROOT_QVEL+6] = 0
 
         if rotation_mode:

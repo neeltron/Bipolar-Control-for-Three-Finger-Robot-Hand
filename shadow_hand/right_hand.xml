@@ -52,9 +52,12 @@
         <joint axis="0 -1 0" range="-0.349066 0.349066"/>
         <position ctrlrange="-0.349066 0.349066"/>
       </default>
+      
+      <!-- CH1 Change the joint limits here! -->
+      
       <default class="proximal">
-        <joint range="-0.261799 1.5708"/>
-        <position ctrlrange="-0.261799 1.5708"/>
+        <joint range="-0.861799 2.5708"/>
+        <position ctrlrange="-0.561799 2.5708"/>
       </default>
       <default class="middle_distal">
         <joint range="0 1.5708"/>
