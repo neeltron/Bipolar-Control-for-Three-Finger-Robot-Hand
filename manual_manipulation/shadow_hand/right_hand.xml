@@ -25,43 +25,43 @@
         <default class="thbase">
           <!--joint axis="0 0 -1" range="-1.0472 1.0472"/-->
           <joint axis="0 0 -1" range="-1.0472 1.0472"/>
-          <position kp="0.4" ctrlrange="-1.0472 1.0472" forcerange="-3 3"/>
+          <position kp="5" ctrlrange="-1.0472 1.0472" forcerange="-3 3"/>
         </default>
         <default class="thproximal">
           <!--joint range="0 1.22173"/-->
           <joint range="0 2"/>
-          <position ctrlrange="0 2" forcerange="-2 2"/>
+          <position kp="5" ctrlrange="0 2" forcerange="-2 2"/>
         </default>
         <default class="thhub">
           <joint range="-0.20944 0.20944"/>
-          <position kp="0.5" ctrlrange="-0.20944 0.20944"/>
+          <position kp="5" ctrlrange="-0.20944 0.20944"/>
         </default>
         <default class="thmiddle">
           <joint axis="0 -1 0" range="-0.698132 0.698132"/>
-          <position kp="1.5" ctrlrange="-0.698132 0.698132"/>
+          <position kp="5" ctrlrange="-0.698132 0.698132"/>
         </default>
         <default class="thdistal">
           <joint range="-0.261799 1.5708"/>
-          <position ctrlrange="-0.261799 1.5708"/>
+          <position kp="5" ctrlrange="-0.261799 1.5708"/>
         </default>
       </default>
 
       <default class="metacarpal">
         <joint axis="0.573576 0 0.819152" range="0 0.785398"/>
-        <position ctrlrange="0 0.785398"/>
+        <position kp="5" ctrlrange="0 0.785398"/>
       </default>
       <default class="knuckle">
         <joint axis="0 -1 0" range="-0.349066 0.349066"/>
-        <position ctrlrange="-0.349066 0.349066"/>
+        <position kp="5" ctrlrange="-0.349066 0.349066"/>
       </default>
       <default class="proximal">
         <!--joint range="-0.261799 1.5708"/-->
         <joint range="-0.261799 2"/>
-        <position ctrlrange="-0.261799 2"/>
+        <position kp="5" ctrlrange="-0.261799 2"/>
       </default>
       <default class="middle_distal">
         <joint range="0 1.5708"/>
-        <position kp="0.5" ctrlrange="0 3.1415"/>
+        <position kp="5" ctrlrange="0 3.1415"/>
       </default>
 
       <!--default class="plastic">
@@ -160,6 +160,11 @@
                   <joint name="rh_FFJ1" class="middle_distal"/>
                   <geom class="plastic_visual" mesh="f_distal_pst"/>
                   <geom class="plastic_collision" type="mesh" mesh="f_distal_pst"/>
+                  <!-- New child body for the pad -->
+                  <body name="ff_pad_body" pos="0 0 0.021">
+                    <geom name="ff_pad" type="capsule" size="0.009 0.008"
+                      solimp="0.7 1.0 0.01" solref="0.02 1" friction="5.0 1.0 0.1" rgba="0.8 0.1 0.1 1"/>
+                  </body>
                 </body>
               </body>
             </body>
@@ -185,6 +190,11 @@
                   <joint name="rh_MFJ1" class="middle_distal"/>
                   <geom class="plastic_visual" mesh="f_distal_pst"/>
                   <geom class="plastic_collision" type="mesh" mesh="f_distal_pst"/>
+                  <!-- New child body for the pad -->
+                  <body name="mf_pad_body" pos="0 0 0.021">
+                    <geom name="mf_pad" type="capsule" size="0.009 0.008"
+                      solimp="0.7 1.0 0.01" solref="0.02 1" friction="5.0 1.0 0.1" rgba="0.8 0.1 0.1 1"/>
+                  </body>
                 </body>
               </body>
             </body>
@@ -270,6 +280,11 @@
                     <joint name="rh_THJ1" class="thdistal"/>
                     <geom class="plastic_visual" mesh="th_distal_pst"/>
                     <geom class="plastic_collision" type="mesh" mesh="th_distal_pst"/>
+                    <!-- New child body for the pad -->
+                    <body name="th_pad_body" pos="0 0 0.025">
+                      <geom name="th_pad" type="capsule" size="0.010 0.010"
+                        solimp="0.7 1.0 0.01" solref="0.02 1" friction="5.0 1.0 0.1" rgba="0.8 0.1 0.1 1"/>
+                    </body>
                   </body>
                 </body>
               </body>

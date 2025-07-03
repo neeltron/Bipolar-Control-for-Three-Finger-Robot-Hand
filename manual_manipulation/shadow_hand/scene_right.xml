@@ -25,8 +25,8 @@
       <body name="stick_rotated" pos="0 0 0" quat="0.707 0 0 0.707">
         <!--geom type="cylinder" size="0.003 0.15" rgba="0.8 0.4 0.2 1" condim="6" priority="1"
           friction="0.8 0.1 0.003"/-->
-        <geom type="box" size="0.007 0.007 0.15" rgba="0.8 0.4 0.2 1" condim="6" priority="1"
-          friction="0.8 0.1 0.003"/>
+        <geom type="box" size="0.007 0.007 0.03" rgba="0.8 0.4 0.2 1" condim="6" priority="1"
+          friction="5.0 1.0 0.1"/>
       </body>
     </body>
 
