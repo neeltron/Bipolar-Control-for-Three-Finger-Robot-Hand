@@ -10,9 +10,16 @@ XML_PATH = r"C:\CARL_Summer_Research\Bipolar-Control-for-Three-Finger-Robot-Hand
 model = mujoco.MjModel.from_xml_path(XML_PATH)
 data = mujoco.MjData(model)
 
-# Freejoint qpos index for the object
+# Freejoint qpos index for the objecttt
 object_joint_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "object_freejoint")
 object_qpos_adr = model.jnt_qposadr[object_joint_id]
+
+# FIXING OBJECT POSITION -
+#data.qpos[object_qpos_adr : object_qpos_adr + 3] = [0.26881994, -0.02300521, 0.13699435]
+#data.qpos[object_qpos_adr + 3 : object_qpos_adr + 7] = [0.70187902,  0.69872301, -0.12464475, 0.06013045]
+
+# Zero velocities to avoid immediate drift
+#data.qvel[object_qpos_adr : object_qpos_adr + 6] = 0
 
 # Get body ID of the stick
 stick_body_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "stick_rotated")
