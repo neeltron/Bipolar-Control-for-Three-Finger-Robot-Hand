@@ -37,7 +37,7 @@ nn<mujoco model="right_shadow_hand scene">
       <freejoint name="object_freejoint"/>
         <!-- Rigid cuboid part  check the mass -->
         <geom type="cylinder" size="0.003 0.15" rgba="0.8 0.4 0.2 1" condim="6" priority="1"
-          friction="1.5 0.1 0.003"/>
+          friction="1.5 0.1 0.003" contype="191" conaffinity="191"/>
     </body>
 
   </worldbody>
