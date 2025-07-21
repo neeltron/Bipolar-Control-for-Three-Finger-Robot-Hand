@@ -5,7 +5,7 @@ import numpy as np
 from scipy.spatial.transform import Rotation as R
 
 # Load model and data
-XML_PATH = r"C:\CARL_Summer_Research\Bipolar-Control-for-Three-Finger-Robot-Hand-main\Bipolar-Control-for-Three-Finger-Robot-Hand-main\manual_manipulation\shadow_hand\scene_right.xml"
+XML_PATH = r"manual_manipulation\shadow_hand\scene_right.xml"
 #XML_PATH = r"E:\Research\MujocoProjects\RLwithHand\wonik_allegro\scene_right.xml"
 model = mujoco.MjModel.from_xml_path(XML_PATH)
 data = mujoco.MjData(model)
