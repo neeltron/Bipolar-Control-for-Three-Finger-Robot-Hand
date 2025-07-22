@@ -381,10 +381,10 @@
       <joint joint="rh_LFJ2" coef="1"/>
       <joint joint="rh_LFJ1" coef="1"/>
     </fixed>
-    <fixed name="rh_THJ0">
+    <!--fixed name="rh_THJ0">
       <joint joint="rh_THJ2" coef="1"/>
       <joint joint="rh_THJ1" coef="1"/>
-    </fixed>
+    </fixed-->
   </tendon>
 
   <actuator>
@@ -393,9 +393,9 @@
     <position name="rh_A_THJ5" joint="rh_THJ5" class="thbase"/>
     <position name="rh_A_THJ4" joint="rh_THJ4" class="thproximal"/>
     <position name="rh_A_THJ3" joint="rh_THJ3" class="thhub"/>
-    <!--position name="rh_A_THJ2" joint="rh_THJ2" class="thmiddle"/>
-    <position name="rh_A_THJ1" joint="rh_THJ1" class="thdistal"/-->
-    <position name="rh_A_THJ0" tendon="rh_THJ0" class="thdistal"/>
+    <position name="rh_A_THJ2" joint="rh_THJ2" class="thmiddle"/>
+    <position name="rh_A_THJ1" joint="rh_THJ1" class="thdistal"/>
+    <!--position name="rh_A_THJ0" tendon="rh_THJ0" class="thdistal"/-->
     <position name="rh_A_FFJ4" joint="rh_FFJ4" class="knuckle"/>
     <position name="rh_A_FFJ3" joint="rh_FFJ3" class="proximal"/>
     <position name="rh_A_FFJ0" tendon="rh_FFJ0" class="middle_distal"/>
@@ -410,4 +410,5 @@
     <position name="rh_A_LFJ3" joint="rh_LFJ3" class="proximal"/>
     <position name="rh_A_LFJ0" tendon="rh_LFJ0" class="middle_distal"/>
   </actuator>
+
 </mujoco>
