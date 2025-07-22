@@ -9,7 +9,6 @@ import sys, serial, pygame, mujoco, numpy as np
 from mujoco import viewer
 from collections import deque
 
-
 model = mujoco.MjModel.from_xml_path("shadow_hand/scene_right.xml")
 data  = mujoco.MjData(model)
 
@@ -40,7 +39,7 @@ last_pos   = initial_pos.copy()
 rotation_mode = False
 control_mode = 1
 
-port = serial.Serial("COM7", 9600, timeout=0.005)
+port = serial.Serial("COM9", 9600, timeout=0.005)
 pygame.init()
 pygame.display.set_mode((320, 200))
 pygame.display.set_caption("Hand Control – click here")
@@ -59,10 +58,21 @@ def map_bipolar_discrete(val, mj_id):
     lo, hi = model.actuator_ctrlrange[mj_id]
     mid = 512
     step = (hi - lo) / 2
-    if val > mid + 100:
+    if val > mid + 200:
         return hi
-    elif val < mid - 100:
+    elif val < mid - 200:
         return lo
+    else:
+        return lo + step
+
+def map_bipolar_discrete_flipped(val, mj_id):
+    lo, hi = model.actuator_ctrlrange[mj_id]
+    mid = 512
+    step = (hi - lo) / 2
+    if val > mid + 200:
+        return lo  # Reversed
+    elif val < mid - 200:
+        return hi  # Reversed
     else:
         return lo + step
 
@@ -87,7 +97,7 @@ with viewer.launch_passive(model, data) as v:
         pkt = port.readline().decode('utf-8', errors='ignore').strip()
         if pkt:
             try:
-                x1,y1,b1,x2,y2,b2,x3,y3,b3 = map(int, pkt.split(','))
+                x1,y1,b1, x2,y2,b2, x3,y3,b3 = map(int, pkt.split(','))
 
                 if control_mode == 1:
                     data.ctrl[middle_ids[0]] = map_axis(y1, middle_ids[0])
@@ -99,18 +109,21 @@ with viewer.launch_passive(model, data) as v:
                     data.ctrl[thumb_ids[2]]  = map_axis(x3, thumb_ids[2])
                     data.ctrl[index_ids[2]]  = map_axis(x2, index_ids[2])
                     data.ctrl[middle_ids[2]] = map_axis(x1, middle_ids[2])
-                elif control_mode == 2:
-                    data.ctrl[middle_ids[2]] = model.actuator_ctrlrange[middle_ids[2]][0]
-                    data.ctrl[thumb_ids[2]]  = model.actuator_ctrlrange[thumb_ids[2]][0]
-                    data.ctrl[index_ids[2]]  = model.actuator_ctrlrange[index_ids[2]][0]
 
-                    # Applied bipolar control
-                    data.ctrl[middle_ids[0]] = map_bipolar_discrete(y1, middle_ids[0])
+                elif control_mode == 2:
+                    # Finger tip joint (joint 0) bending on joystick button press
+                    for btn, aid in zip([b1, b3, b2], [middle_ids[2], thumb_ids[2], index_ids[2]]):
+                        lo, hi = model.actuator_ctrlrange[aid]
+                        data.ctrl[aid] = lo if btn else hi
+
+                    # Bipolar control for proximal & lateral joints
+                    data.ctrl[middle_ids[0]] = map_bipolar_discrete_flipped(y1, middle_ids[0])
                     data.ctrl[middle_ids[1]] = map_bipolar_discrete(x1, middle_ids[1])
                     data.ctrl[thumb_ids[0]]  = map_bipolar_discrete(y3, thumb_ids[0])
                     data.ctrl[thumb_ids[1]]  = map_bipolar_discrete(x3, thumb_ids[1])
-                    data.ctrl[index_ids[0]]  = map_bipolar_discrete(y2, index_ids[0])
+                    data.ctrl[index_ids[0]]  = map_bipolar_discrete_flipped(y2, index_ids[0])
                     data.ctrl[index_ids[1]]  = map_bipolar_discrete(x2, index_ids[1])
+
             except ValueError:
                 print("Bad packet:", pkt)
 
@@ -124,8 +137,8 @@ with viewer.launch_passive(model, data) as v:
                     print("Rotation")
                 if e.key == pygame.K_t:
                     rotation_mode = False
-                    target_z  = float(data.qpos[ROOT_QPOS+2])
-                    last_pos  = data.qpos[ROOT_QPOS:ROOT_QPOS+3].copy()
+                    target_z = float(data.qpos[ROOT_QPOS+2])
+                    last_pos = data.qpos[ROOT_QPOS:ROOT_QPOS+3].copy()
                     print("Translation")
                 if e.key == pygame.K_1:
                     control_mode = 1
@@ -158,7 +171,6 @@ with viewer.launch_passive(model, data) as v:
             last_pos = data.qpos[ROOT_QPOS:ROOT_QPOS+3].copy()
 
         mujoco.mj_step(model, data)
-
         data.qvel[ROOT_QVEL:ROOT_QVEL+3] = 0
         if rotation_mode:
             data.qpos[ROOT_QPOS:ROOT_QPOS+3] = last_pos
