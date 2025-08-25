@@ -16,7 +16,7 @@ import time
 class StickSpinEnv(gym.Env):
     metadata = {"render_modes": ["human"], "render_fps": 60}
 
-    def __init__(self, model_path, max_steps=1000, render=False, frame_skip=20):
+    def __init__(self, model_path, max_steps=1000, render=True, frame_skip=20):
         super().__init__()
         self.model = mujoco.MjModel.from_xml_path(model_path)
         self.data = mujoco.MjData(self.model)
