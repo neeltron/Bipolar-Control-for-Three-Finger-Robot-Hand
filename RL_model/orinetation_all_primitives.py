@@ -72,6 +72,7 @@ class PrimitiveOnlyEnv(gym.Env):
         self.rot_qpos_stick = np.array([0.355, -0.01, 0.06, 0.496, -0.496, 0.503, 0.503], dtype=np.float32)
 
         self.prev_face = -1
+        self.prev_face_or = -1
         self.face_penalty = 0
 
     # -------- helpers you already have (object_state, quaternion_to_euler_z, _quat_* etc.) --------
@@ -335,9 +336,9 @@ class PrimitiveOnlyEnv(gym.Env):
         pos_aff, up_face, face_or = self.object_state(obj_pos, obj_quat)
 
         drop = (obj_pos[2] < 0.027)
-        success = (up_face == 4) and (pos_aff in (0,1,2,3,4,5,7,8))
+        success = (up_face == 4) and (pos_aff in (0,1,2,3,4,5,7,8)) and face_or == 7
 
-        if self.prev_face == up_face:
+        if self.prev_face == up_face or self.prev_face_or == face_or:
             self.face_penalty = self.face_penalty - 0.08
             #print("Face_penalty", self.face_penalty)
 
@@ -366,8 +367,9 @@ class PrimitiveOnlyEnv(gym.Env):
             succ = 0
 
         self.prev_face = up_face 
+        self.prev_face_or = face_or
 
-        #print("upface=", up_face, "pos", pos_aff)
+
         return float(rew+self.face_penalty), succ
 
 
@@ -646,17 +648,17 @@ p13 = [
 #     #np.array([ 0, -1, -1, -1, 0, 0, 0, -1, 1, 1]),
 # ]
 
-# p21 = [
-#     np.array([-1, -1, 0, 0, -1, -1, 0, -1, 0, 0]),        ####When object is at the far back end of the palm, thumb push the object back in from behind - CORRECTIVE PRIMITIVE
-#     np.array([-1, 0, 0, -1, -1, -1, 0, -1, 0, -1]),
-#     np.array([-1, 1, -1, -1, -1, -1, 0, -1, 0, -1]),
-#     np.array([0, 1, -1, -1, -1, 0, 0, -1, 0, -1]),
-#     np.array([0, 1, -1, -1, -1, 0, 0, -1, 0, 1]),
-#     np.array([-1, 1, -1, -1, -1, 0, 0, -1, 0, 1]),
-#     np.array([-1, 0, -1, -1, -1, 0, 0, -1, 0, 1]),
-#     np.array([-1, -1, -1, -1, -1, 0, 0, -1, 0, 1]),
-#     np.array([0, -1, -1, -1, -1, 0, 0, -1, 0, 0]),
-# ]
+p21 = [
+    np.array([-1, -1, 0, 0, -1, -1, 0, -1, 0, 0]),        ####When object is at the far back end of the palm, thumb push the object back in from behind - CORRECTIVE PRIMITIVE
+    np.array([-1, 0, 0, -1, -1, -1, 0, -1, 0, -1]),
+    np.array([-1, 1, -1, -1, -1, -1, 0, -1, 0, -1]),
+    np.array([0, 1, -1, -1, -1, 0, 0, -1, 0, -1]),
+    np.array([0, 1, -1, -1, -1, 0, 0, -1, 0, 1]),
+    np.array([-1, 1, -1, -1, -1, 0, 0, -1, 0, 1]),
+    np.array([-1, 0, -1, -1, -1, 0, 0, -1, 0, 1]),
+    np.array([-1, -1, -1, -1, -1, 0, 0, -1, 0, 1]),
+    np.array([0, -1, -1, -1, -1, 0, 0, -1, 0, 0]),
+]
 
 # p13 = [
 #     np.array([-1, 0, 0, 0, 1, -1, 0, 0, 0, 0]),
@@ -778,13 +780,13 @@ if __name__ == "__main__":
         gamma=0.99,
         gae_lambda=0.95,
         clip_range=0.2,
-        ent_coef=0.009,
+        ent_coef=0.01,
         policy_kwargs=policy_kwargs,
         device="cuda",
         verbose=1,
     )
 
     callback = PrimitiveUsageCallback(K=len(P))
-    model.learn(total_timesteps=4560000, callback=callback)
-    venv.save("vecnormalize_all.pkl")
-    model.save("ppo_primitives_only_all")
+    model.learn(total_timesteps=5560000, callback=callback)
+    venv.save("vecnormalize_all_or.pkl")
+    model.save("ppo_primitives_only_all_or")

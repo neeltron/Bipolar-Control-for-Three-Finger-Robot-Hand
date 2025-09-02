@@ -259,29 +259,29 @@ class PrimitiveOnlyEnv(gym.Env):
                 mujoco.mj_step(self.model, self.data)
                 if self.render_enabled: self.render()
 
-            self.current_step += 1
-            last_obs = self._get_obs()
-            obs_vec = last_obs["observation"]
-            obj_state = obs_vec[-7:]
-            obj_pos, obj_quat = obj_state[:3], obj_state[3:]
-            r, succ = self.compute_reward(obj_pos, obj_quat)
-            total_r += float(r)
-            dropped = (obj_pos[2] < 0.027)
-            terminated = bool(succ) or dropped
+        self.current_step += 1
+        last_obs = self._get_obs()
+        obs_vec = last_obs["observation"]
+        obj_state = obs_vec[-7:]
+        obj_pos, obj_quat = obj_state[:3], obj_state[3:]
+        r, succ = self.compute_reward(obj_pos, obj_quat)
+        total_r = float(r)
+        dropped = (obj_pos[2] < 0.027)
+        terminated = bool(succ) or dropped
 
-            # if bool(succ):
-            #     #print("------success---------")
-                
-            #     time.sleep(5)
+        # if bool(succ):
+        #     #print("------success---------")
+            
+        #     time.sleep(5)
 
-            truncated  = self.current_step >= self.max_steps
+        truncated  = self.current_step >= self.max_steps
 
-            info = {
-                "is_success": int(bool(succ)),                 # 1 only for clean success
-                "event": "success" if succ else ("drop" if dropped else "none"),
-                "terminated": terminated,
-                "truncated": truncated,
-            }
+        info = {
+            "is_success": int(bool(succ)),                 # 1 only for clean success
+            "event": "success" if succ else ("drop" if dropped else "none"),
+            "terminated": terminated,
+            "truncated": truncated,
+        }
 
             # if terminated or truncated:
             #     return last_obs, total_r, terminated, truncated, info
@@ -338,7 +338,7 @@ class PrimitiveOnlyEnv(gym.Env):
         success = (up_face == 4) and (pos_aff in (0,1,2,3,4,5,7,8))
 
         if self.prev_face == up_face:
-            self.face_penalty = self.face_penalty - 0.08
+            self.face_penalty = self.face_penalty - 1
             #print("Face_penalty", self.face_penalty)
 
         else:
@@ -357,10 +357,10 @@ class PrimitiveOnlyEnv(gym.Env):
 
 
         if drop:
-            rew = pf_r - 5
+            rew = pf_r - 10
             succ = 0   # drop overrides success
         if success and not drop:
-            rew = pf_r + 100
+            rew = pf_r + 10
             succ = 1
         else:
             succ = 0
@@ -785,6 +785,6 @@ if __name__ == "__main__":
     )
 
     callback = PrimitiveUsageCallback(K=len(P))
-    model.learn(total_timesteps=4560000, callback=callback)
-    venv.save("vecnormalize_all.pkl")
-    model.save("ppo_primitives_only_all")
+    model.learn(total_timesteps=456000, callback=callback)
+    venv.save("vecnormalize_al_dis_r.pkl")
+    model.save("ppo_primitives_only_all_dis_r")
