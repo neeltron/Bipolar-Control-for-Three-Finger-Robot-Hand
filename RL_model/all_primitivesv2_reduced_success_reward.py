@@ -72,7 +72,6 @@ class PrimitiveOnlyEnv(gym.Env):
         self.rot_qpos_stick = np.array([0.355, -0.01, 0.06, 0.496, -0.496, 0.503, 0.503], dtype=np.float32)
 
         self.prev_face = -1
-        self.prev_face_or = -1
         self.face_penalty = 0
 
     # -------- helpers you already have (object_state, quaternion_to_euler_z, _quat_* etc.) --------
@@ -284,6 +283,12 @@ class PrimitiveOnlyEnv(gym.Env):
                 "truncated": truncated,
             }
 
+            if bool(succ):
+                time.sleep(5)
+                return last_obs, total_r, terminated, truncated, info
+                break
+
+
             # if terminated or truncated:
             #     return last_obs, total_r, terminated, truncated, info
             #     break
@@ -292,8 +297,9 @@ class PrimitiveOnlyEnv(gym.Env):
             # after the for-loop:
         #print("total_reward", total_r)
         # un comment sleep to visualize during evaluation only 
-        if bool(succ):
-            time.sleep(5)
+        # if bool(succ):
+        #     time.sleep(5)
+
         return last_obs, total_r, terminated, truncated, info
 
     def render(self):
@@ -336,9 +342,9 @@ class PrimitiveOnlyEnv(gym.Env):
         pos_aff, up_face, face_or = self.object_state(obj_pos, obj_quat)
 
         drop = (obj_pos[2] < 0.027)
-        success = (up_face == 4) and (pos_aff in (0,1,2,3,4,5,7,8)) and face_or == 7
+        success = (up_face == 4) and (pos_aff in (0,1,2,3,4,5,7,8))
 
-        if self.prev_face == up_face or self.prev_face_or == face_or:
+        if self.prev_face == up_face:
             self.face_penalty = self.face_penalty - 0.08
             #print("Face_penalty", self.face_penalty)
 
@@ -367,9 +373,8 @@ class PrimitiveOnlyEnv(gym.Env):
             succ = 0
 
         self.prev_face = up_face 
-        self.prev_face_or = face_or
 
-
+        #print("upface=", up_face, "pos", pos_aff)
         return float(rew+self.face_penalty), succ
 
 
@@ -648,17 +653,17 @@ p13 = [
 #     #np.array([ 0, -1, -1, -1, 0, 0, 0, -1, 1, 1]),
 # ]
 
-p21 = [
-    np.array([-1, -1, 0, 0, -1, -1, 0, -1, 0, 0]),        ####When object is at the far back end of the palm, thumb push the object back in from behind - CORRECTIVE PRIMITIVE
-    np.array([-1, 0, 0, -1, -1, -1, 0, -1, 0, -1]),
-    np.array([-1, 1, -1, -1, -1, -1, 0, -1, 0, -1]),
-    np.array([0, 1, -1, -1, -1, 0, 0, -1, 0, -1]),
-    np.array([0, 1, -1, -1, -1, 0, 0, -1, 0, 1]),
-    np.array([-1, 1, -1, -1, -1, 0, 0, -1, 0, 1]),
-    np.array([-1, 0, -1, -1, -1, 0, 0, -1, 0, 1]),
-    np.array([-1, -1, -1, -1, -1, 0, 0, -1, 0, 1]),
-    np.array([0, -1, -1, -1, -1, 0, 0, -1, 0, 0]),
-]
+# p21 = [
+#     np.array([-1, -1, 0, 0, -1, -1, 0, -1, 0, 0]),        ####When object is at the far back end of the palm, thumb push the object back in from behind - CORRECTIVE PRIMITIVE
+#     np.array([-1, 0, 0, -1, -1, -1, 0, -1, 0, -1]),
+#     np.array([-1, 1, -1, -1, -1, -1, 0, -1, 0, -1]),
+#     np.array([0, 1, -1, -1, -1, 0, 0, -1, 0, -1]),
+#     np.array([0, 1, -1, -1, -1, 0, 0, -1, 0, 1]),
+#     np.array([-1, 1, -1, -1, -1, 0, 0, -1, 0, 1]),
+#     np.array([-1, 0, -1, -1, -1, 0, 0, -1, 0, 1]),
+#     np.array([-1, -1, -1, -1, -1, 0, 0, -1, 0, 1]),
+#     np.array([0, -1, -1, -1, -1, 0, 0, -1, 0, 0]),
+# ]
 
 # p13 = [
 #     np.array([-1, 0, 0, 0, 1, -1, 0, 0, 0, 0]),
@@ -728,18 +733,31 @@ P = [
 # env = DummyVecEnv([lambda: PrimitiveOnlyEnv("scene_right_op.xml", primitives=P, render=False, frame_skip=100)])
 # env = VecNormalize(env, norm_obs=True, norm_reward=True, clip_obs=10.0)
 
+# ======== TRAINING + BEST-MODEL SAVING ========
 import os
 os.environ.setdefault("MUJOCO_GL", "egl")  # headless in workers
 
+import multiprocessing as mp
+import torch
+
+from stable_baselines3 import PPO
 from stable_baselines3.common.vec_env import SubprocVecEnv, VecNormalize
 from stable_baselines3.common.monitor import Monitor
-from stable_baselines3 import PPO
-import torch
+from stable_baselines3.common.callbacks import EvalCallback, StopTrainingOnNoModelImprovement
+from stable_baselines3.common.vec_env import DummyVecEnv
 
 XML = os.path.abspath("scene_right_op.xml")  # avoid CWD issues
 
+VECNORM_PATH = "all_primitives_break_success.pkl"
+BEST_DIR = "./break_success_best_model"
+LOG_DIR = "./break_success_logs"
+os.makedirs(BEST_DIR, exist_ok=True)
+os.makedirs(LOG_DIR, exist_ok=True)
+print("Best models will be saved to:", os.path.abspath(BEST_DIR))
+print("Logs will be saved to:", os.path.abspath(LOG_DIR))
+
 def make_env():
-    # top-level function (picklable) that returns an env when called
+    """Picklable factory for SubprocVecEnv workers."""
     def _init():
         return Monitor(
             PrimitiveOnlyEnv(XML, primitives=P, render=False, frame_skip=100),
@@ -747,30 +765,71 @@ def make_env():
         )
     return _init
 
+def make_eval_env_from_saved_stats():
+    """
+    Build a single-process eval vec env and, if available, load VecNormalize stats
+    from disk using VecNormalize.load(...). We freeze stats during eval.
+    """
+    def _make():
+        # base Gym env + Monitor (same as training)
+        return Monitor(
+            PrimitiveOnlyEnv(XML, primitives=P, render=False, frame_skip=100),
+            info_keywords=("is_success",)
+        )
+
+    # IMPORTANT: VecNormalize needs a VecEnv, so wrap with DummyVecEnv
+    base_vec = DummyVecEnv([_make])
+
+    if os.path.exists(VECNORM_PATH):
+        # Load saved running stats onto the vec env
+        eval_env = VecNormalize.load(VECNORM_PATH, base_vec)
+    else:
+        # Fresh stats if none saved yet (keep keys consistent with training)
+        eval_env = VecNormalize(
+            base_vec,
+            norm_obs=True,
+            norm_reward=True,
+            clip_obs=10.0,
+            norm_obs_keys=["observation", "prev_action", "Obj_shape"],
+        )
+
+    # Freeze stats during evaluation; avoid reward normalization for clear metrics
+    eval_env.training = False
+    eval_env.norm_reward = False
+    return eval_env
+
 policy_kwargs = dict(
     activation_fn=torch.nn.ReLU,
     net_arch=dict(pi=[256, 256], vf=[256, 256]),
 )
 
 if __name__ == "__main__":
-    # On Linux you can force 'fork' if your Python defaults to 'spawn'/'forkserver'
-    import multiprocessing as mp
+    # Prefer 'fork' if available (Linux)
     try:
         mp.set_start_method("fork")
     except RuntimeError:
         pass  # already set
 
+    # -------- Build training vectorized env --------
     n_envs = 8
     venv = SubprocVecEnv([make_env() for _ in range(n_envs)])
-    #venv = VecNormalize(venv, norm_obs=True, norm_reward=True, clip_obs=10.0)
-    venv = VecNormalize(
-    venv,
-    norm_obs=True,
-    norm_reward=True,
-    clip_obs=10.0,
-    norm_obs_keys=["observation", "prev_action", "Obj_shape"],  # or just the ones you want\
-    )
 
+    # If stats file exists, continue from it; otherwise start fresh
+    if os.path.exists(VECNORM_PATH):
+        venv = VecNormalize.load(VECNORM_PATH, venv)
+        venv.training = True
+        venv.norm_reward = True
+    else:
+        venv = VecNormalize(
+            venv,
+            norm_obs=True, norm_reward=True, clip_obs=10.0,
+            norm_obs_keys=["observation", "prev_action", "Obj_shape"],
+        )
+
+    # -------- Build evaluation env (uses .load() when available) --------
+    eval_env = make_eval_env_from_saved_stats()
+
+    # -------- PPO model --------
     model = PPO(
         "MultiInputPolicy",
         venv,
@@ -780,13 +839,67 @@ if __name__ == "__main__":
         gamma=0.99,
         gae_lambda=0.95,
         clip_range=0.2,
-        ent_coef=0.01,
+        ent_coef=0.009,
         policy_kwargs=policy_kwargs,
         device="cuda",
         verbose=1,
+        # target_kl=0.02,     # optional stabilization
     )
 
-    callback = PrimitiveUsageCallback(K=len(P))
-    model.learn(total_timesteps=5560000, callback=callback)
-    venv.save("vecnormalize_all_or.pkl")
-    model.save("ppo_primitives_only_all_or")
+
+    # -------- Baseline eval at t=0 --------
+    from stable_baselines3.common.evaluation import evaluate_policy
+    import numpy as np
+
+    from stable_baselines3.common.callbacks import EvalCallback, StopTrainingOnNoModelImprovement, CallbackList
+
+    EVAL_FREQ = 4096  # was 4096; 20k steps → ~9 evals now
+
+    # Baseline eval and save under a different name so it's not confused with "best"
+    baseline_best = -np.inf
+    try:
+        mean_r, std_r = evaluate_policy(model, eval_env, n_eval_episodes=5, deterministic=True)
+        print(f"[Baseline eval @ step 0] mean={mean_r:.3f} ± {std_r:.3f}")
+        baseline_best = float(mean_r)
+
+        baseline_out = os.path.join(BEST_DIR, "baseline_model")
+        model.save(baseline_out)
+        print("Baseline model saved to:", os.path.abspath(baseline_out) + ".zip")
+    except Exception as e:
+        print("[Baseline eval] skipped due to error:", repr(e))
+
+    usage_cb = PrimitiveUsageCallback(K=len(P))
+
+    eval_cb = EvalCallback(
+        eval_env,
+        best_model_save_path=BEST_DIR,
+        log_path=LOG_DIR,
+        eval_freq=EVAL_FREQ,
+        n_eval_episodes=100,
+        deterministic=True,
+        render=False,
+        verbose=2,  # more prints: "Eval num_timesteps=...", "New best mean reward ..."
+        callback_after_eval=StopTrainingOnNoModelImprovement(
+            max_no_improvement_evals=5,
+            min_evals=3,
+            verbose=1,
+        ),
+    )
+
+    # Let EvalCallback start from the baseline mean so improvements actually overwrite
+    eval_cb.best_mean_reward = baseline_best
+
+    # Use an explicit CallbackList (clearer than passing a raw list)
+    callback_list = CallbackList([usage_cb, eval_cb])
+
+    model.learn(total_timesteps=2_457_600, callback=callback_list)
+
+    # -------- Save artifacts --------
+    # save updated normalization stats so future runs/evals can .load() them
+    venv.save(VECNORM_PATH)
+
+    # save the final model (separate from the best checkpoint)
+    model.save("all_primitives_break_success")
+
+    print("\nTraining complete.")
+
