@@ -1,5 +1,5 @@
 nn<mujoco model="right_shadow_hand scene">
-  <include file="pad_right_hand.xml"/>
+  <include file="pos_mid_tip_pad_right_handv3.xml"/>
 
   <option solver="CG" tolerance="1e-6" timestep=".001" integrator="implicitfast"/>
 

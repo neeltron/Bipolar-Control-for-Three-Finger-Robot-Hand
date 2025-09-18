@@ -1,0 +1,6 @@
+Tue Jul 22 16:03:13 2025
+WARNING: mju_openResource: unknown file 'E:\Research\MujocoProjects\RLwithHand\flexibletip_shadowhand\scene_right_m.xml'
+
+Tue Jul 22 16:43:47 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 333. The simulation is unstable. Time = 1.7540.
+

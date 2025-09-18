@@ -5,7 +5,7 @@ import time
 import glfw
 
 # === Load model and data ===
-XML_PATH = r"E:\Research\MujocoProjects\RLwithHand\shadow_hand\scene_right_m.xml"
+XML_PATH = r"../Flexibletip_shadowhand/scene_right_m.xml"
 model = mujoco.MjModel.from_xml_path(XML_PATH)
 data = mujoco.MjData(model)
 global current_ctrl, should_update_ctrl, indexcrx, thumbcrx, middlecrx, t_i_pull

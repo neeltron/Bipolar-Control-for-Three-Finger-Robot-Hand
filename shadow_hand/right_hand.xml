@@ -182,7 +182,7 @@
               </body>
             </body>
           </body>
-          <body name="rh_rfknuckle" pos="-0.011 0 0.095">
+          <!--<body name="rh_rfknuckle" pos="-0.011 0 0.095">
             <inertial mass="0.008" pos="0 0 0" quat="0.5 0.5 -0.5 0.5" diaginertia="3.2e-07 2.6e-07 2.6e-07"/>
             <joint name="rh_RFJ4" class="knuckle" axis="0 1 0"/>
             <geom pos="0 0 0.0005" class="plastic_visual" mesh="f_knuckle" material="metallic"/>
@@ -206,8 +206,8 @@
                 </body>
               </body>
             </body>
-          </body>
-          <body name="rh_lfmetacarpal" pos="-0.033 0 0.02071">
+          </body> -->
+          <!-- <body name="rh_lfmetacarpal" pos="-0.033 0 0.02071">
             <inertial mass="0.03" pos="0 0 0.04" quat="1 0 0 1" diaginertia="1.638e-05 1.45e-05 4.272e-06"/>
             <joint name="rh_LFJ5" class="metacarpal"/>
             <geom class="plastic_visual" mesh="lf_metacarpal"/>
@@ -237,7 +237,7 @@
                 </body>
               </body>
             </body>
-          </body>
+          </body> -->
           <body name="rh_thbase" pos="0.034 -0.00858 0.029" quat="0.92388 0 0.382683 0">
             <inertial mass="0.01" pos="0 0 0" diaginertia="1.6e-07 1.6e-07 1.6e-07"/>
             <joint name="rh_THJ5" class="thbase"/>
@@ -287,14 +287,14 @@
       <joint joint="rh_MFJ2" coef="1"/>
       <joint joint="rh_MFJ1" coef="1"/>
     </fixed>
-    <fixed name="rh_RFJ0">
+    <!-- <fixed name="rh_RFJ0">
       <joint joint="rh_RFJ2" coef="1"/>
       <joint joint="rh_RFJ1" coef="1"/>
     </fixed>
     <fixed name="rh_LFJ0">
       <joint joint="rh_LFJ2" coef="1"/>
       <joint joint="rh_LFJ1" coef="1"/>
-    </fixed>
+    </fixed> -->
   </tendon>
 
   <actuator>
@@ -311,12 +311,12 @@
     <position name="rh_A_MFJ4" joint="rh_MFJ4" class="knuckle"/>
     <position name="rh_A_MFJ3" joint="rh_MFJ3" class="proximal"/>
     <position name="rh_A_MFJ0" tendon="rh_MFJ0" class="middle_distal"/>
-    <position name="rh_A_RFJ4" joint="rh_RFJ4" class="knuckle"/>
+    <!-- <position name="rh_A_RFJ4" joint="rh_RFJ4" class="knuckle"/>
     <position name="rh_A_RFJ3" joint="rh_RFJ3" class="proximal"/>
     <position name="rh_A_RFJ0" tendon="rh_RFJ0" class="middle_distal"/>
     <position name="rh_A_LFJ5" joint="rh_LFJ5" class="metacarpal"/>
     <position name="rh_A_LFJ4" joint="rh_LFJ4" class="knuckle"/>
     <position name="rh_A_LFJ3" joint="rh_LFJ3" class="proximal"/>
-    <position name="rh_A_LFJ0" tendon="rh_LFJ0" class="middle_distal"/>
+    <position name="rh_A_LFJ0" tendon="rh_LFJ0" class="middle_distal"/> -->
   </actuator>
 </mujoco>

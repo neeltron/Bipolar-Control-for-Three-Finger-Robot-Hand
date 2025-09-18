@@ -5,7 +5,7 @@ import numpy as np
 from scipy.spatial.transform import Rotation as R
 
 # Load model and data
-XML_PATH = r"E:\Research\MujocoProjects\RLwithHand\flexibletip_shadowhand\scene_right_m.xml"
+XML_PATH = r"../shadow_hand/scene_right_m.xml"
 #XML_PATH = r"E:\Research\MujocoProjects\RLwithHand\wonik_allegro\scene_right_m.xml"
 model = mujoco.MjModel.from_xml_path(XML_PATH)
 data = mujoco.MjData(model)
@@ -99,5 +99,4 @@ with mujoco.viewer.launch_passive(model, data, key_callback=key_callback) as vie
         #print(f"itr running = {itr}")
 
         viewer.sync()
-
 

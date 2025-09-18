@@ -1,0 +1,59 @@
+<mujoco model="right_shadow_hand scene">
+  <!--include file="pos_mid_tip_pad_right_handv7.xml"/-->
+  <include file="right_hand_p.xml"/>
+<option solver="Newton" tolerance="1e-6" timestep=".002" integrator="implicitfast"/>
+
+  <!--option solver="CG" tolerance="1e-6" timestep=".001" integrator="implicitfast"/-->
+
+  <!--size memory="10M"/-->
+
+  <compiler meshdir="assets"/>
+
+  <statistic extent="0.3" center="0.3 0 0"/>
+
+  <visual>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <quality shadowsize="8192"/>
+    <global azimuth="220" elevation="-30"/>
+  </visual>
+
+  <asset>
+    <!-- Sky and ground textures -->
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge"
+             rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
+             markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+
+    <!-- Bumpy cylinder mesh and material -->
+    <mesh name="bumpy_cylinder" file="bumpy_cylinder.stl" scale="1 1 1"/>
+    <material name="bumpy_material" rgba="0.8 0.4 0.2 1" reflectance="0.1"/>
+  </asset>
+
+  <worldbody>
+    <!-- Lights and floor -->
+    <light pos="0 0 1"/>
+    <light pos="0.3 0 1.5" dir="0 0 -1" directional="true"/>
+    <geom name="floor" pos="0 0 -0.1" size="0 0 0.01" type="plane" material="groundplane"/>
+    <body name="hybrid_cuboid" pos="0.32 -0.01 0.08">
+  <freejoint name="object_freejoint"/>
+
+  <!-- Contact-hardened cuboid -->
+  <geom type="box" size="0.026 0.026 0.026"
+        rgba="0.8 0.4 0.2 1"
+        friction="1.5 0.1 0.003"
+        solimp="0.995 0.999 0.0001"
+        solref="0.003 1"
+        margin="5e-4"/>
+
+  <!-- Axes helpers (no contact) -->
+  <geom type="box" size="0.0001 0.026 0.026" pos="0.0265 0 0" rgba="1 0 0 1" contype="0" conaffinity="0"/>
+  <geom type="box" size="0.0001 0.026 0.026" pos="-0.0265 0 0" rgba="0 1 0 1" contype="0" conaffinity="0"/>
+  <geom type="box" size="0.026 0.0001 0.026" pos="0 0.0265 0" rgba="0 0 1 1" contype="0" conaffinity="0"/>
+  <geom type="box" size="0.026 0.0001 0.026" pos="0 -0.0265 0" rgba="1 1 0 1" contype="0" conaffinity="0"/>
+  <geom type="box" size="0.026 0.026 0.0001" pos="0 0 0.0265" rgba="0.6 0 0.8 1" contype="0" conaffinity="0"/>
+  <geom type="box" size="0.026 0.026 0.0001" pos="0 0 -0.0265" rgba="1 1 1 1" contype="0" conaffinity="0"/>
+</body>
+
+  </worldbody>
+</mujoco>

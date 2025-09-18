@@ -97,3 +97,48 @@ ERROR: mjv_updateSceneState: m->nu changed
 Fri Jun 27 14:30:11 2025
 ERROR: mjv_updateSceneState: m->nu changed
 
+Mon Aug  4 16:03:35 2025
+WARNING: Insufficient arena memory for the number of constraints generated. Increase arena memory allocation above 10M bytes. Time = 5.7600.
+
+Mon Aug  4 17:27:42 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 645. The simulation is unstable. Time = 10.3840.
+
+Tue Aug  5 10:34:38 2025
+WARNING: Insufficient arena memory for the number of constraints generated. Increase arena memory allocation above 10M bytes. Time = 3.5440.
+
+Tue Aug  5 10:34:38 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 645. The simulation is unstable. Time = 3.5600.
+
+Tue Aug  5 12:48:55 2025
+WARNING: Insufficient arena memory for the number of constraints generated. Increase arena memory allocation above 100M bytes. Time = 0.0100.
+
+Tue Aug  5 12:48:55 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 5. The simulation is unstable. Time = 0.0100.
+
+Tue Aug  5 12:49:24 2025
+WARNING: Insufficient arena memory for the number of constraints generated. Increase arena memory allocation above 100M bytes. Time = 0.0100.
+
+Tue Aug  5 12:49:24 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 5. The simulation is unstable. Time = 0.0100.
+
+Tue Aug  5 12:52:38 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 646. The simulation is unstable. Time = 0.0100.
+
+Tue Aug  5 12:52:39 2025
+WARNING: Nan, Inf or huge value in QVEL at DOF 646. The simulation is unstable. Time = 0.0100.
+
+Tue Aug  5 12:53:30 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 646. The simulation is unstable. Time = 1.1180.
+
+Wed Aug  6 14:47:26 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 647. The simulation is unstable. Time = 15.9040.
+
+Thu Aug  7 12:40:51 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 647. The simulation is unstable. Time = 154.4160.
+
+Thu Aug  7 14:58:10 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 645. The simulation is unstable. Time = 1485.0440.
+
+Thu Aug  7 15:11:36 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 645. The simulation is unstable. Time = 147.3840.
+

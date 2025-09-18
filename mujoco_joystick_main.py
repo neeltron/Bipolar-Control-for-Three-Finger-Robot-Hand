@@ -4,28 +4,34 @@ Created on Wed Jun 25 11:27:39 2025
 
 @author: neeltron
 """
-
 import sys, serial, pygame, mujoco, numpy as np
 from mujoco import viewer
 from collections import deque
 
-model = mujoco.MjModel.from_xml_path("shadow_hand/scene_right.xml")
+model = mujoco.MjModel.from_xml_path("shadow_hand/scene_right_op.xml")
 data  = mujoco.MjData(model)
 
-model.opt.gravity[:] = (0.0, 0.0, -9.81)
 
-hand_body_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "rh_forearm")
-queue = deque([hand_body_id])
-while queue:
-    bid = queue.popleft()
-    model.body_gravcomp[bid] = 1.0
-    queue.extend([i for i in range(model.nbody) if model.body_parentid[i] == bid])
+def set_hand_and_object_weightless():
+    hand_root = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "rh_forearm")
+    q = deque([hand_root])
+    while q:
+        bid = q.popleft()
+        model.body_gravcomp[bid] = 1.0
+        q.extend([i for i in range(model.nbody) if model.body_parentid[i] == bid])
 
-# js1 = middle, js2 = thumb, js3 = index
+    # Object body
+    obj_bid = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "hybrid_cuboid")
+    if obj_bid != -1:
+        model.body_gravcomp[obj_bid] = 1.0
 
-thumb_ids  = [mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, n) for n in ("rh_A_THJ4", "rh_A_THJ2", "rh_A_THJ1")]
+set_hand_and_object_weightless()
+gravity_enabled = True
+
+# js1 = middle, js2 = index, js3 = thumb
+thumb_ids  = [mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, n) for n in ("rh_A_THJ4", "rh_A_THJ5", "rh_A_THJ2")]
 index_ids  = [mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, n) for n in ("rh_A_FFJ4", "rh_A_FFJ3", "rh_A_FFJ0")]
-middle_ids = [mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, n) for n in ("rh_A_MFJ4", "rh_A_MFJ3", "rh_A_MFJ0")]
+middle_ids = [mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, n) for n in ("rh_A_RFJ4", "rh_A_RFJ3", "rh_A_RFJ0")]
 
 root_jid   = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "rh_root_free")
 ROOT_QPOS  = model.jnt_qposadr[root_jid]
@@ -34,10 +40,12 @@ ROOT_QVEL  = model.jnt_dofadr[root_jid]
 initial_pos  = data.qpos[ROOT_QPOS:ROOT_QPOS+3].copy()
 initial_quat = data.qpos[ROOT_QPOS+3:ROOT_QPOS+7].copy()
 
-target_z   = float(initial_pos[2])
-last_pos   = initial_pos.copy()
-rotation_mode = False
-control_mode = 1
+target_z       = float(initial_pos[2])
+last_pos       = initial_pos.copy()
+locked_quat    = initial_quat.copy()
+rotation_mode  = False
+control_mode   = 2
+
 
 port = serial.Serial("COM9", 9600, timeout=0.005)
 pygame.init()
@@ -45,13 +53,13 @@ pygame.display.set_mode((320, 200))
 pygame.display.set_caption("Hand Control – click here")
 pygame.key.set_repeat(1, 10)
 
-MOVE_STEP_XY = 0.002
-MOVE_STEP_Z  = 0.002
-ROT_STEP     = np.deg2rad(0.5)
+MOVE_STEP_XY = 0.0005
+MOVE_STEP_Z  = 0.0005
+ROT_STEP     = np.deg2rad(0.05)
 
 def map_axis(val, mj_id, invert=False):
     lo, hi = model.actuator_ctrlrange[mj_id]
-    ctrl = lo + (hi - lo) * ((1023-val)/1023 if invert else val/1023)
+    ctrl = lo + (hi - lo) * ((1023 - val) / 1023 if invert else val / 1023)
     return max(lo, min(hi, ctrl))
 
 def map_bipolar_discrete(val, mj_id):
@@ -70,9 +78,9 @@ def map_bipolar_discrete_flipped(val, mj_id):
     mid = 512
     step = (hi - lo) / 2
     if val > mid + 200:
-        return lo  # Reversed
+        return lo
     elif val < mid - 200:
-        return hi  # Reversed
+        return hi
     else:
         return lo + step
 
@@ -93,6 +101,8 @@ def mul_quat(q1, q2):
         w1*z2 + x1*y2 - y1*x2 + z1*w2])
 
 with viewer.launch_passive(model, data) as v:
+    print("Bipolar Discrete mode ACTIVE by default")
+
     while v.is_running():
         pkt = port.readline().decode('utf-8', errors='ignore').strip()
         if pkt:
@@ -111,12 +121,10 @@ with viewer.launch_passive(model, data) as v:
                     data.ctrl[middle_ids[2]] = map_axis(x1, middle_ids[2])
 
                 elif control_mode == 2:
-                    # Finger tip joint (joint 0) bending on joystick button press
                     for btn, aid in zip([b1, b3, b2], [middle_ids[2], thumb_ids[2], index_ids[2]]):
                         lo, hi = model.actuator_ctrlrange[aid]
                         data.ctrl[aid] = lo if btn else hi
 
-                    # Bipolar control for proximal & lateral joints
                     data.ctrl[middle_ids[0]] = map_bipolar_discrete_flipped(y1, middle_ids[0])
                     data.ctrl[middle_ids[1]] = map_bipolar_discrete(x1, middle_ids[1])
                     data.ctrl[thumb_ids[0]]  = map_bipolar_discrete(y3, thumb_ids[0])
@@ -133,10 +141,12 @@ with viewer.launch_passive(model, data) as v:
             if e.type == pygame.KEYDOWN:
                 if e.key == pygame.K_r:
                     rotation_mode = True
+                    locked_quat = data.qpos[ROOT_QPOS+3:ROOT_QPOS+7].copy()
                     last_pos = data.qpos[ROOT_QPOS:ROOT_QPOS+3].copy()
                     print("Rotation")
                 if e.key == pygame.K_t:
                     rotation_mode = False
+                    locked_quat = data.qpos[ROOT_QPOS+3:ROOT_QPOS+7].copy()
                     target_z = float(data.qpos[ROOT_QPOS+2])
                     last_pos = data.qpos[ROOT_QPOS:ROOT_QPOS+3].copy()
                     print("Translation")
@@ -146,33 +156,41 @@ with viewer.launch_passive(model, data) as v:
                 if e.key == pygame.K_2:
                     control_mode = 2
                     print("Bipolar Discrete")
+                if e.key == pygame.K_x:
+                    # Keep global gravity on; X toggles only the OBJECT gravcomp
+                    obj_bid = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "hybrid_cuboid")
+                    if obj_bid != -1:
+                        model.body_gravcomp[obj_bid] = 0.0 if model.body_gravcomp[obj_bid] > 0 else 1.0
+                        print(f"Object gravcomp set to {model.body_gravcomp[obj_bid]}")
 
         keys = pygame.key.get_pressed()
+
+        data.qfrc_applied[ROOT_QVEL:ROOT_QVEL+6] = 0
         data.qvel[ROOT_QVEL:ROOT_QVEL+6] = 0
 
         if rotation_mode:
-            quat = data.qpos[ROOT_QPOS+3:ROOT_QPOS+7].copy()
+            quat = locked_quat.copy()
             if keys[pygame.K_w]: quat = mul_quat(quat, small_quat([1,0,0],  ROT_STEP))
             if keys[pygame.K_s]: quat = mul_quat(quat, small_quat([1,0,0], -ROT_STEP))
             if keys[pygame.K_a]: quat = mul_quat(quat, small_quat([0,0,1],  ROT_STEP))
             if keys[pygame.K_d]: quat = mul_quat(quat, small_quat([0,0,1], -ROT_STEP))
             if keys[pygame.K_q]: quat = mul_quat(quat, small_quat([0,1,0],  ROT_STEP))
             if keys[pygame.K_e]: quat = mul_quat(quat, small_quat([0,1,0], -ROT_STEP))
-            data.qpos[ROOT_QPOS+3:ROOT_QPOS+7] = quat / (np.linalg.norm(quat)+1e-9)
+            quat = quat / (np.linalg.norm(quat)+1e-9)
+            data.qpos[ROOT_QPOS+3:ROOT_QPOS+7] = quat
             data.qpos[ROOT_QPOS:ROOT_QPOS+3] = last_pos
+            locked_quat = quat.copy()
         else:
-            if keys[pygame.K_w]: data.qpos[ROOT_QPOS+1] += MOVE_STEP_XY
-            if keys[pygame.K_s]: data.qpos[ROOT_QPOS+1] -= MOVE_STEP_XY
-            if keys[pygame.K_a]: data.qpos[ROOT_QPOS]   -= MOVE_STEP_XY
-            if keys[pygame.K_d]: data.qpos[ROOT_QPOS]   += MOVE_STEP_XY
+            if keys[pygame.K_w]: last_pos[1] += MOVE_STEP_XY
+            if keys[pygame.K_s]: last_pos[1] -= MOVE_STEP_XY
+            if keys[pygame.K_a]: last_pos[0] -= MOVE_STEP_XY
+            if keys[pygame.K_d]: last_pos[0] += MOVE_STEP_XY
             if keys[pygame.K_q]: target_z += MOVE_STEP_Z
             if keys[pygame.K_e]: target_z -= MOVE_STEP_Z
-            data.qpos[ROOT_QPOS+2] = target_z
-            last_pos = data.qpos[ROOT_QPOS:ROOT_QPOS+3].copy()
+            last_pos[2] = target_z
+            data.qpos[ROOT_QPOS:ROOT_QPOS+3]   = last_pos
+            data.qpos[ROOT_QPOS+3:ROOT_QPOS+7] = locked_quat
 
         mujoco.mj_step(model, data)
-        data.qvel[ROOT_QVEL:ROOT_QVEL+3] = 0
-        if rotation_mode:
-            data.qpos[ROOT_QPOS:ROOT_QPOS+3] = last_pos
 
         v.sync()
