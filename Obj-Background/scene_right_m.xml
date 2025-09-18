@@ -107,7 +107,7 @@
 
 
     <body name="hybrid_cuboid" pos="0.3 0 0.1">
-      <inertial mass="0.5" pos="0 0 0" diaginertia="0.001 0.001 0.001"/>
+<!--       <inertial mass="0.5" pos="0 0 0" diaginertia="0.001 0.001 0.001"/> -->
       <freejoint name="object_freejoint"/>
         <!-- Rigid cube large-->
         <geom type="box" size="0.026 0.026 0.026" rgba="0.8 0.4 0.2 1" friction="1.5 0.1 0.003" contype="191" conaffinity="191"/>
