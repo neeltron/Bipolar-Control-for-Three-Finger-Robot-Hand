@@ -1,0 +1,68 @@
+nn<mujoco model="right_shadow_hand scene">
+  <!--include file="pos_mid_tip_pad_right_handv7.xml"/-->
+  <include file="right_hand_p.xml"/>
+
+  <!--option solver="CG" tolerance="1e-6" timestep=".001" integrator="implicitfast"/-->
+
+  <!--size memory="10M"/-->
+
+  <compiler meshdir="assets"/>
+
+  <statistic extent="0.3" center="0.3 0 0"/>
+
+  <visual>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <quality shadowsize="8192"/>
+    <global azimuth="220" elevation="-30"/>
+  </visual>
+
+  <asset>
+    <!-- Sky and ground textures -->
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge"
+             rgb1="0.9 0.9 0.9" rgb2="0.9 0.9 0.9"
+             markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+
+    <!-- Bumpy cylinder mesh and material -->
+    <mesh name="bumpy_cylinder" file="bumpy_cylinder.stl" scale="1 1 1"/>
+    <material name="bumpy_material" rgba="0.8 0.4 0.2 1" reflectance="0.1"/>
+    <mesh name="sq_prism" file="sq_prism.obj" scale=".05 .05 .05"/>
+  </asset>
+
+  <worldbody>
+    <!-- Lights and floor -->
+    <light pos="0 0 2" dir="0 0 -1" directional="true" diffuse="0.3 0.3 0.3" castshadow="false"/>
+    <light pos="2 0 2" dir="-1 0 -1" directional="true" diffuse="0.2 0.2 0.2" castshadow="false"/>
+    <light pos="-2 0 2" dir="1 0 -1" directional="true" diffuse="0.2 0.2 0.2" castshadow="false"/>
+    <light pos="0 2 2" dir="0 -1 -1" directional="true" diffuse="0.2 0.2 0.2" castshadow="false"/>
+    <light pos="0 -2 2" dir="0 1 -1" directional="true" diffuse="0.2 0.2 0.2" castshadow="false"/>
+    <geom name="floor" pos="0 0 -0.1" size="0 0 0.01" type="plane" material="groundplane"/>
+    <body name="hybrid_cuboid" pos="0.7 0 0.1">
+      <freejoint name="object_freejoint"/>
+        
+      <!-- <geom type="mesh" mesh="sq_prism" rgba="0.7 0.7 0.3 1"
+      condim="6" priority="1"
+      friction="1.5 0.1 0.003"
+      contype="191" conaffinity="191" euler="1.5708  0 0"/> -->
+      <geom type="box" size="0.026 0.026 0.026" rgba="0.8 0.4 0.2 1" friction="1.1 0.008 0.0009" contype="191" conaffinity="191"/>
+      <geom type="box" size="0.0001 0.026 0.026" pos="0.0265 0 0" rgba="1 0 0 1" friction="1.1 0.008 0.0009"  contype="0" conaffinity="0"/>
+      <geom type="box" size="0.0001 0.026 0.026" pos="-0.0265 0 0" rgba="0 1 0 1" friction="1.1 0.008 0.0009"  contype="0" conaffinity="0"/>
+      <geom type="box" size="0.026 0.0001 0.026" pos="0 0.0265 0" rgba="0 0 1 1" friction="1.1 0.008 0.0009"  contype="0" conaffinity="0"/>
+      <geom type="box" size="0.026 0.0001 0.026" pos="0 -0.0265 0" rgba="1 1 0 1" friction="1.1 0.008 0.0009"  contype="0" conaffinity="0"/>
+      <geom type="box" size="0.026 0.026 0.0001" pos="0 0 0.0265" rgba="0.6 0 0.8 1" friction="1.1 0.008 0.0009"  contype="0" conaffinity="0"/>
+      <geom type="box" size="0.026 0.026 0.0001" pos="0 0 -0.0265" rgba="1 1 1 1" friction="1.1 0.008 0.0009"  contype="0" conaffinity="0"/>
+      <!-- <geom type="cylinder" size="0.026 0.026" rgba="0.2 0.4 0.8 1" friction="1.5 0.1 0.003" contype="191"conaffinity="191" euler="1.57 0 0"/>
+      <geom type="box" size="0.026 0.0208 0.0318" rgba="0.8 0.4 0.2 1" friction="1.5 0.1 0.003" contype="191" conaffinity="191"/> -->
+
+      <!-- <geom type="box" size="0.026 0.006 0.026" pos="0 -0.02 0" rgba="0.8 0.4 0.2 1" friction="1.5 0.1 0.003" contype="191" conaffinity="191"/>
+      <geom type="box" size="0.024 0.006 0.024" pos="0 -0.01 0" rgba="0.8 0.4 0.2 1" friction="1.5 0.1 0.003" contype="191" conaffinity="191"/>
+      <geom type="box" size="0.022 0.006 0.022" pos="0 0 0" rgba="0.8 0.4 0.2 1" friction="1.5 0.1 0.003" contype="191" conaffinity="191"/>
+      <geom type="box" size="0.021 0.006 0.021" pos="0 0.01 0" rgba="0.8 0.4 0.2 1" friction="1.5 0.1 0.003" contype="191" conaffinity="191"/>
+      <geom type="box" size="0.0208 0.006 0.0208" pos="0 0.02 0" rgba="0.8 0.4 0.2 1" friction="1.5 0.1 0.003" contype="191" conaffinity="191"/> -->
+
+
+    </body>
+
+  </worldbody>
+</mujoco>
