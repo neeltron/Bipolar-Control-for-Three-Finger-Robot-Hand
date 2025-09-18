@@ -1,0 +1,19 @@
+=== Evaluation Summary ===
+Episodes: 1000
+Success rate: 0.84
+Avg return:   62.191
+Avg length:   8.47
+
+Primitive usage (all episodes):
+  primitive 0: 1913 times
+  primitive 8: 1886 times
+  primitive 3: 1413 times
+  primitive 10: 695 times
+  primitive 2: 562 times
+  primitive 1: 482 times
+  primitive 11: 402 times
+  primitive 5: 393 times
+  primitive 7: 262 times
+  primitive 4: 229 times
+  primitive 9: 148 times
+  primitive 6: 82 times
