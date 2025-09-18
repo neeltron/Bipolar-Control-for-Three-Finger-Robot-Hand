@@ -24,10 +24,37 @@ nn<mujoco model="right_shadow_hand scene">
              markrgb="0.8 0.8 0.8" width="300" height="300"/>
     <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
 
+
+
+        <!-- Letter textures (files in assets/letters/) -->
+    <texture type="2d" name="tex_A" file="assets/letters/A.png"/>
+    <texture type="2d" name="tex_B" file="assets/letters/B.png"/>
+    <texture type="2d" name="tex_C" file="assets/letters/C.png"/>
+    <texture type="2d" name="tex_D" file="assets/letters/D.png"/>
+    <texture type="2d" name="tex_E" file="assets/letters/E.png"/>
+    <texture type="2d" name="tex_F" file="assets/letters/F.png"/>
+
+    <!-- Materials that apply those textures -->
+    <material name="face_A" texture="tex_A" texuniform="false" texrepeat="1 1"/>
+    <material name="face_B" texture="tex_B" texuniform="false" texrepeat="1 1"/>
+    <material name="face_C" texture="tex_C" texuniform="false" texrepeat="1 1"/>
+    <material name="face_D" texture="tex_D" texuniform="false" texrepeat="1 1"/>
+    <material name="face_E" texture="tex_E" texuniform="false" texrepeat="1 1"/>
+    <material name="face_F" texture="tex_F" texuniform="false" texrepeat="1 1"/>
+
+
     <!-- Bumpy cylinder mesh and material -->
     <mesh name="bumpy_cylinder" file="bumpy_cylinder.stl" scale="1 1 1"/>
     <material name="bumpy_material" rgba="0.8 0.4 0.2 1" reflectance="0.1"/>
     <mesh name="sq_prism" file="sq_prism.obj" scale=".05 .05 .05"/>
+    <material name="face_red" rgba="1 0 0 1"/>
+    <material name="face_green" rgba="0 1 0 1"/>
+    <material name="face_blue" rgba="0 0 1 1"/>
+    <material name="face_yellow" rgba="0.6 0 0.8 1"/>  <!--rgba="1 1 0 1-->
+    <material name="face_purple" rgba="0.6 0 0.8 1"/>
+    <material name="face_white" rgba="1 1 1 1"/>   <!--rgba="1 1 1 1-->
+
+
   </asset>
 
   <worldbody>
@@ -40,18 +67,31 @@ nn<mujoco model="right_shadow_hand scene">
     <geom name="floor" pos="0 0 -0.1" size="0 0 0.01" type="plane" material="groundplane"/>
     <body name="hybrid_cuboid" pos="0.7 0 0.1">
       <freejoint name="object_freejoint"/>
-        
+
+      <geom type="box" size="0.026 0.026 0.026" rgba="0.8 0.4 0.2 1" friction="1.1 0.008 0.0009" contype="191" conaffinity="191"/>
+      <!--geom type="box" size="0.0001 0.026 0.026" pos="0.0265 0 0" material="face_A" friction="1.5 0.1 0.003" contype="191" conaffinity="191"/-->
+      <geom name="faceA" type="box" size="0.026 0.026 0.00005" pos="0.02610 0 0" quat="0.7071068 0 0.7071068 0" material="face_A" friction="1.1 0.008 0.0009" contype="191" conaffinity="191"/>
+      <!--geom type="box" size="0.0001 0.026 0.026" pos="-0.0265 0 0" material="face_B" friction="1.5 0.1 0.003" contype="191" conaffinity="191"/-->
+      <geom name="faceB" type="box" size="0.026 0.026 0.00005" pos="-0.0265 0 0"  quat="0.7071068 0 -0.7071068 0" material="face_B" friction="1.1 0.008 0.0009" contype="191" conaffinity="191"/>
+      <!--geom type="box" size="0.026 0.0001 0.026" pos="0 0.0265 0" material="face_C" friction="1.5 0.1 0.003" contype="191" conaffinity="191"/-->
+      <geom name="faceC" type="box" size="0.026 0.026 0.00005" pos="0 0.0265 0" quat="0.7071068 -0.7071068 0 0" material="face_C" friction="1.1 0.008 0.0009" contype="191" conaffinity="191"/>
+      <!--geom type="box" size="0.026 0.0001 0.026" pos="0 -0.0265 0" material="face_D" friction="1.5 0.1 0.003" contype="191" conaffinity="191"/-->
+      <geom name="faceD" type="box" size="0.026 0.026 0.00005" pos="0 -0.0265 0" quat="0.7071068 0.7071068 0 0" material="face_D" friction="1.1 0.008 0.0009" contype="191" conaffinity="191"/>
+      <geom type="box" size="0.026 0.026 0.0001" pos="0 0 0.0265" material="face_E" friction="1.1 0.008 0.0009" contype="191" conaffinity="191"/>
+      <geom type="box" size="0.026 0.026 0.0001" pos="0 0 -0.0265" material="face_F" friction="1.1 0.008 0.0009" contype="191" conaffinity="191"/>
+
+
       <!-- <geom type="mesh" mesh="sq_prism" rgba="0.7 0.7 0.3 1"
       condim="6" priority="1"
       friction="1.5 0.1 0.003"
       contype="191" conaffinity="191" euler="1.5708  0 0"/> -->
-      <geom type="box" size="0.026 0.026 0.026" rgba="0.8 0.4 0.2 1" friction="1.1 0.008 0.0009" contype="191" conaffinity="191"/>
+      <!-- <geom type="box" size="0.026 0.026 0.026" rgba="0.8 0.4 0.2 1" friction="1.1 0.008 0.0009" contype="191" conaffinity="191"/>
       <geom type="box" size="0.0001 0.026 0.026" pos="0.0265 0 0" rgba="1 0 0 1" friction="1.1 0.008 0.0009"  contype="0" conaffinity="0"/>
       <geom type="box" size="0.0001 0.026 0.026" pos="-0.0265 0 0" rgba="0 1 0 1" friction="1.1 0.008 0.0009"  contype="0" conaffinity="0"/>
       <geom type="box" size="0.026 0.0001 0.026" pos="0 0.0265 0" rgba="0 0 1 1" friction="1.1 0.008 0.0009"  contype="0" conaffinity="0"/>
       <geom type="box" size="0.026 0.0001 0.026" pos="0 -0.0265 0" rgba="1 1 0 1" friction="1.1 0.008 0.0009"  contype="0" conaffinity="0"/>
       <geom type="box" size="0.026 0.026 0.0001" pos="0 0 0.0265" rgba="0.6 0 0.8 1" friction="1.1 0.008 0.0009"  contype="0" conaffinity="0"/>
-      <geom type="box" size="0.026 0.026 0.0001" pos="0 0 -0.0265" rgba="1 1 1 1" friction="1.1 0.008 0.0009"  contype="0" conaffinity="0"/>
+      <geom type="box" size="0.026 0.026 0.0001" pos="0 0 -0.0265" rgba="1 1 1 1" friction="1.1 0.008 0.0009"  contype="0" conaffinity="0"/> -->
       <!-- <geom type="cylinder" size="0.026 0.026" rgba="0.2 0.4 0.8 1" friction="1.5 0.1 0.003" contype="191"conaffinity="191" euler="1.57 0 0"/>
       <geom type="box" size="0.026 0.0208 0.0318" rgba="0.8 0.4 0.2 1" friction="1.5 0.1 0.003" contype="191" conaffinity="191"/> -->
 

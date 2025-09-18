@@ -69,7 +69,7 @@ class PrimitiveOnlyEnv(gym.Env):
         })
         self.prev_action = np.zeros(self.n_finger_joints, dtype=np.float32)
         self.rot_qpos_stick = np.array([0.355, -0.01, 0.06, 0.496, -0.496, 0.503, 0.503], dtype=np.float32)
-        #self.rot_qpos_stick = np.array([0.355, -0.01, 0.06, 0.32218804, -0.62490036, 0.33090538, 0.62944105], dtype=np.float32)
+        self.rot_qpos_stick = np.array([0.355, -0.01, 0.06, 0.32218804, -0.62490036, 0.33090538, 0.62944105], dtype=np.float32)
 
         self.prev_face = -1
         self.face_penalty = 0
@@ -232,7 +232,7 @@ class PrimitiveOnlyEnv(gym.Env):
         quat = random_quaternion()
         self.data.qpos[qpos_addr:qpos_addr+7] = np.concatenate([pos, quat])
         #set pose here 
-        #self.data.qpos[qpos_addr: qpos_addr + 7] = self.rot_qpos_stick
+        self.data.qpos[qpos_addr: qpos_addr + 7] = self.rot_qpos_stick
         mujoco.mj_forward(self.model, self.data)
         return self._get_obs(), {}
 
@@ -596,135 +596,7 @@ p12 = [
 ]
 
 
-# p14 = [
-#     np.array([ 0, 0, 0, -1, -1, 0, 0, -1, 0, 1]),       ####releasing object onto the palm - RELEASE PRIMITIVE
-#     np.array([ 0, 0, 0, -1, -1, -1, 0, -1, 0, 1]),
-#     np.array([ 0, 0, -1, -1, -1, -1, 0, -1, 0, 1]),
-#     np.array([ 0, 0, -1, -1, -1, -1, 0, -1, 0, 1]),
-#     np.array([ 0, 0, -1, -1, -1, -1, 0, -1, 1, 1]),
-# ]
 
-# p15 = [
-#     np.array([ 0, 0, -1, -1, -1, -1, 0, -1, 1, 1]),      ####Ring finger slightly reorients the object while other two cages - REORIENTATION PRIMITIVE
-#     np.array([ 0, 0, -1, -1, -1, 0, 0, -1, 1, 1]),
-#     np.array([ 0, 0, -1, -1, -1, 0, 0, -1, 1, 1]),
-#     np.array([ 0, 0, -1, -1, -1, 0, 0, 0, 1, 1]),
-#     np.array([ 0, 0, -1, -1, -1, 0, 0, 0, 1, 1]),####
-#     np.array([ 0, 0, -1, -1, -1, 0, 0, 0, 1, 1]),
-#     np.array([ 0, 0, -1, -1, -1, 0, 0, 0, 0, 1]),
-#     np.array([ 0, 0, -1, -1, -1, 0, 0, 0, 0, 1]),
-#     np.array([ 0, 0, -1, -1, -1, 0, 0, 0, 0, 0]),
-#     np.array([ 0, 0, -1, -1, -1, 0, 0, 0, 0, 0]),
-# ]
-
-# p5 = [
-#     np.array([ 0, 0, -1, -1, -1, 0, 0, 0, 1, 1]),
-#     np.array([ 0, 0, -1, -1, -1, 0, 0, 0, 0, 1]),
-#     np.array([ 0, 0, -1, -1, -1, 0, 0, 0, 0, 1]),
-#     np.array([ 0, 0, -1, -1, -1, 0, 0, 0, 0, 0]),
-#     np.array([ 0, 0, -1, -1, -1, 0, 0, 0, 0, 0]),
-# ]
-
-# p16 = [
-#     np.array([ 0, 0, -1, -1, -1, 0, 0, -1, 0, 0]),       ####Thumb tries to pull back object from one corner - CORRECTIVE PRIMITIVE
-#     np.array([ 0, 1, 0, -1, -1, 0, 0, -1, 0, 1]),
-#     np.array([ 0, 0, 0, -1, -1, 0, 0, -1, 0, 1]),
-#     np.array([ 0, 0, -1, -1, -1, 0, 0, -1, 0, -1]),
-#     np.array([ -1, 0, 0, -1, -1, 0, 0, -1, 0, 0]),
-#     np.array([ -1, -1, 0, -1, -1, 0, 0, -1, 0, 0]),
-# ]
-
-# p7 = [
-#     np.array([ 0, 0, 0, -1, -1, 0, 0, -1, 0, 1]),
-#     np.array([ 0, 0, -1, -1, -1, 0, 0, -1, 0, 0]),
-#     np.array([ 0, -1, -1, -1, -1, 0, 0, -1, 0, 0]),
-#     np.array([ 0, -1, -1, -1, -1, 0, 0, -1, 0, 1]),
-# ]
-
-# p17 = [
-#     np.array([ 0, -1, -1, -1, -1, 0, 0, 0, 0, 1]),         ####When object is at the corner, thumb and index pushes it back in  - CORRECTIVE PRIMITIVE
-#     np.array([ 0, -1, 0, -1, -1, 1, 0, 0, 0, 0]),
-#     np.array([ 0, -1, 0, -1, -1, 0, 0, 0, 0, 0]),
-#     np.array([ 0, -1, 0, 0, -1, 0, 0, 0, 0, 0]),
-#     np.array([ 0, -1, 0, 0, -1, 1, 0, 0, 0, 0]),
-#     np.array([ 0, -1, 0, -1, -1, 0, 0, 0, 0, 0]),
-# ]
-
-
-
-# p19 = [
-#     np.array([-1, -1, 0, 0, 1, -1, 0, 0, 0, 0]),       ####When object is at the far end of a corner, thumb pulls it back in  - CORRECTIVE PRIMITIVE
-#     np.array([-1, 0, 0, 0, 1, -1, 0, -1, 0, 0]),
-#     np.array([-1, 1, 0, 0, 0, -1, 0, -1, 0, 0]),
-#     np.array([0, 1, 0, 0, -1, -1, 0, -1, 0, 0]),
-#     np.array([1, 1, -1, -1, -1, 0, 0, -1, 0, 0]),
-#     np.array([0, 1, -1, -1, -1, 0, 0, -1, 0, 0]),
-#     np.array([-1, 1, -1, -1, -1, 0, 0, -1, 0, 0]),
-#     np.array([-1, 0, -1, -1, 0, 0, 0, -1, 0, 1]),
-#     np.array([-1, -1,-1, -1, 0, 0, 0, -1, 0, 1]),
-#     np.array([0, -1,-1, -1, -1, 0, 0, -1, 0, 1]),
-# ]
-
-# p20 = [
-#     np.array([ 0, -1, -1, -1, 0, 0, 0, -1, 0, 1]),       ####Reorients the object from the ring side - REORIENTATION PRIMITIVE
-#     np.array([ 0, -1, -1, -1, 0, 0, 0, -1, 1, 1]),
-#     np.array([ 0, -1, -1, -1, 0, 0, 0, 0, 1, 1]),
-#     np.array([ 0, -1, -1, -1, 0, 0, 0, 0, 1, 1]),
-#     #np.array([ 0, -1, -1, -1, 0, 0, 0, 0, 1, 1]),
-#     #np.array([ 0, -1, -1, -1, 0, 0, 0, -1, 1, 1]),
-# ]
-
-# p21 = [
-#     np.array([-1, -1, 0, 0, -1, -1, 0, -1, 0, 0]),        ####When object is at the far back end of the palm, thumb push the object back in from behind - CORRECTIVE PRIMITIVE
-#     np.array([-1, 0, 0, -1, -1, -1, 0, -1, 0, -1]),
-#     np.array([-1, 1, -1, -1, -1, -1, 0, -1, 0, -1]),
-#     np.array([0, 1, -1, -1, -1, 0, 0, -1, 0, -1]),
-#     np.array([0, 1, -1, -1, -1, 0, 0, -1, 0, 1]),
-#     np.array([-1, 1, -1, -1, -1, 0, 0, -1, 0, 1]),
-#     np.array([-1, 0, -1, -1, -1, 0, 0, -1, 0, 1]),
-#     np.array([-1, -1, -1, -1, -1, 0, 0, -1, 0, 1]),
-#     np.array([0, -1, -1, -1, -1, 0, 0, -1, 0, 0]),
-# ]
-
-# p13 = [
-#     np.array([-1, 0, 0, 0, 1, -1, 0, 0, 0, 0]),
-#     np.array([-1, 0, 0, 0, 1, 0, 0, 0, 0, 0]),
-#     np.array([-1, 0, 0, 0, 1, -1, 0, 0, 0, 0]),
-# ]
-
-# p22 = [
-#     np.array([0, -1, -1, 0, -1, 0, 0, -1, 0, 0]),        ####When object is laterally disbalanced and about to fall off from the edge of the palm, thumb pushes it back in - CORRECTIVE PRIMITIVE
-#     np.array([0, -1, -1, -1, -1, 0, -1, -1, 0, 1]),
-#     np.array([0, -1, -1, -1, -1, 0, -1, -1, 0, 0]),
-#     np.array([0, -1,-1, -1, -1, 0, -1, -1, 0, 1]),
-#     np.array([0, -1, 0, -1, -1, 0, -1, -1, 0, 1]),
-# ]
-
-# p23 = [
-#     np.array([ 0, -1, -1, 0, -1, -1, -1, -1, 0, 0]),      ####When object at the corner of index finger, index finger pushes the object in - CORRECTIVE PRIMITIVE
-#     np.array([ 0, -1, -1, -1, -1, 0, -1, -1, 0, 0]),
-#     np.array([ 0, -1, -1, -1, -1, 0, -1, -1, 0, 0]),
-#     np.array([ 0, -1, -1, -1, -1, 1, -1, -1, 0, 0]),
-#     np.array([ 0, -1, -1, -1, -1, 1, -1, -1, 0, 0]),
-# ]
-
-# p24 = [
-#     np.array([ 0, -1, -1, -1, -1, 0, 0, -1, -1, 0]),      ####When object at the corner of ring finger, ring finger pushes the object in - CORRECTIVE PRIMITIVE
-#     np.array([ 0, -1, -1, -1, -1, 0, -1, -1, 0, 0]),
-#     np.array([ 0, -1, -1, -1, -1, 0, -1, -1, 0, 0]),
-#     np.array([ 0, -1, -1, -1, -1, 0, -1, -1, 1, 0]),
-#     np.array([ 0, -1, -1, -1, -1, 0, -1, -1, 1, 0]),
-# ]
-
-# p25 = [
-#     np.array([ 0, -1, -1, 0, -1, -1, 0, -1, -1, 0]),     ###rotates object front to back Y axis (according to mujoco) - ROTATORY PRIMITIVE
-#     np.array([ 0, -1, -1, 0, 0, -1, 0, 0, -1, 0]),
-#     np.array([ 0, -1, -1, 0, 0, 0, 0, 0, 0, 0]),
-#     np.array([ 0, -1, -1, 0, 0, 0, 0, 0, 0, 0]),
-#     np.array([ 0, -1, -1, 0, 0, 0, 0, 0, 0, -1]),
-#     np.array([ 0, 0, -1, 0, 0, 0, 0, 0, 0, -1]),
-#     np.array([ 0, 0, -1, 0, 0, 0, 0, 0, 0, 0]),
-# ]
 
 #Convert to validated (L, n) arrays
 P = [

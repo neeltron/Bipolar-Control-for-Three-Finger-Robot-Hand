@@ -9,9 +9,9 @@ MODEL_PATH    = os.path.abspath("all_primitives_break_success.zip")
 VECNORM_PATH  = os.path.abspath("all_primitives_break_success.pkl")
 
 # === RUN SETTINGS ===
-NUM_EPISODES      = 1000
+NUM_EPISODES      = 100
 DETERMINISTIC     = True
-RENDER            = False      # if False, uses EGL headless
+RENDER            = True      # if False, uses EGL headless
 FRAME_HOLD_SEC    = 1.5            # keep last frame visible when episode ends (if rendering)
 
 # ----------------------------------------
