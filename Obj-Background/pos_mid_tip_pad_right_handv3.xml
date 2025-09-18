@@ -96,9 +96,9 @@
 
 
   <!-- Neutral, low-gloss greys for the hand -->
-  <material name="black"   rgba="0.45 0.45 0.45 1" specular="0.3" shininess="0.25"/>
-  <material name="gray"    rgba="0.52 0.52 0.52 1" specular="0.3" shininess="0.25"/>
-  <material name="metallic" rgba="0.50 0.50 0.50 1" specular="0.4" shininess="0.4"/>
+  <material name="black"   rgba="0.35 0.35 0.35 1" specular="0.3" shininess="0.25"/>
+  <material name="gray"    rgba="0.42 0.42 0.42 1" specular="0.3" shininess="0.25"/>
+  <material name="metallic" rgba="0.40 0.40 0.40 1" specular="0.4" shininess="0.4"/>
 
     <mesh class="right_hand" file="forearm_0.obj"/>
     <mesh class="right_hand" file="forearm_1.obj"/>
