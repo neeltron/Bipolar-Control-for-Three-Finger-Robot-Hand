@@ -68,9 +68,8 @@ class PrimitiveOnlyEnv(gym.Env):
             'Obj_shape':   spaces.Box(low=-np.inf, high=np.inf, shape=(self.n_finger_joints,), dtype=np.float32),
         })
         self.prev_action = np.zeros(self.n_finger_joints, dtype=np.float32)
-        #self.rot_qpos_stick = np.array([0.355, -0.01, 0.06, 0.496, -0.496, 0.503, 0.503], dtype=np.float32)
-        #self.rot_qpos_stick = np.array([0.355, -0.01, 0.07, 0.32218804, -0.62490036, 0.33090538, 0.62944105], dtype=np.float32)
-        self.rot_qpos_stick = np.array([0.355, -0.01, 0.07, 0.02598825, -0.70619872,  0.03580782,  0.70662988], dtype=np.float32)
+        self.rot_qpos_stick = np.array([0.355, -0.01, 0.06, 0.496, -0.496, 0.503, 0.503], dtype=np.float32)
+
 
         self.prev_face = -1
         self.face_penalty = 0
@@ -233,7 +232,7 @@ class PrimitiveOnlyEnv(gym.Env):
         quat = random_quaternion()
         self.data.qpos[qpos_addr:qpos_addr+7] = np.concatenate([pos, quat])
         #set pose here 
-        self.data.qpos[qpos_addr: qpos_addr + 7] = self.rot_qpos_stick
+        #self.data.qpos[qpos_addr: qpos_addr + 7] = self.rot_qpos_stick
         mujoco.mj_forward(self.model, self.data)
         return self._get_obs(), {}
 
