@@ -1,0 +1,152 @@
+Episode 1: return=92.280  len=7  success=1
+  primitives used: [11, 11, 7, 11, 8, 0, 11]
+
+Episode 2: return=17.450  len=26  success=1
+  primitives used: [3, 2, 0, 8, 1, 10, 10, 10, 7, 10, 0, 0, 3, 0, 0, 0, 0, 8, 8, 8, 8, 8, 8, 2, 8, 1]
+
+Episode 3: return=25.640  len=25  success=1
+  primitives used: [3, 2, 0, 8, 1, 10, 10, 7, 3, 0, 0, 3, 0, 6, 0, 7, 0, 1, 0, 0, 0, 0, 8, 1, 0]
+
+Episode 4: return=92.110  len=7  success=1
+  primitives used: [10, 11, 2, 3, 0, 8, 8]
+
+Episode 5: return=77.110  len=7  success=1
+  primitives used: [7, 2, 0, 8, 1, 10, 0]
+
+Episode 6: return=73.160  len=5  success=1
+  primitives used: [8, 2, 7, 0, 11]
+
+Episode 7: return=81.480  len=7  success=1
+  primitives used: [3, 2, 0, 10, 8, 8, 8]
+
+Episode 8: return=76.000  len=10  success=1
+  primitives used: [8, 2, 3, 0, 11, 11, 3, 11, 8, 0]
+
+Episode 9: return=88.400  len=7  success=1
+  primitives used: [8, 11, 11, 11, 4, 10, 0]
+
+Episode 10: return=85.880  len=13  success=1
+  primitives used: [7, 11, 8, 7, 7, 7, 7, 7, 7, 11, 8, 8, 0]
+
+Episode 11: return=80.520  len=9  success=1
+  primitives used: [8, 2, 3, 7, 3, 8, 3, 0, 11]
+
+Episode 12: return=77.760  len=7  success=1
+  primitives used: [3, 2, 0, 10, 8, 8, 11]
+
+Episode 13: return=77.520  len=7  success=1
+  primitives used: [3, 2, 0, 8, 8, 2, 0]
+
+Episode 14: return=17.840  len=27  success=1
+  primitives used: [3, 2, 0, 8, 1, 10, 10, 10, 3, 10, 0, 11, 4, 0, 3, 0, 0, 0, 0, 0, 8, 1, 0, 8, 7, 1, 0]
+
+Episode 15: return=88.160  len=8  success=1
+  primitives used: [8, 2, 10, 8, 8, 8, 0, 8]
+
+Episode 16: return=87.720  len=10  success=1
+  primitives used: [8, 2, 10, 11, 3, 11, 8, 0, 11, 0]
+
+Episode 17: return=91.320  len=6  success=1
+  primitives used: [8, 2, 10, 8, 8, 0]
+
+Episode 18: return=81.330  len=8  success=1
+  primitives used: [3, 2, 0, 10, 3, 11, 11, 3]
+
+Episode 19: return=87.740  len=8  success=1
+  primitives used: [3, 7, 7, 2, 9, 11, 0, 8]
+
+Episode 20: return=81.480  len=7  success=1
+  primitives used: [3, 2, 0, 10, 8, 8, 8]
+
+Episode 21: return=80.120  len=11  success=1
+  primitives used: [7, 11, 3, 2, 3, 0, 8, 8, 1, 0, 11]
+
+Episode 22: return=77.520  len=7  success=1
+  primitives used: [3, 2, 0, 8, 8, 2, 0]
+
+Episode 23: return=73.160  len=5  success=1
+  primitives used: [8, 2, 7, 0, 11]
+
+Episode 24: return=77.520  len=7  success=1
+  primitives used: [3, 2, 0, 8, 8, 2, 0]
+
+Episode 25: return=77.890  len=7  success=1
+  primitives used: [8, 2, 3, 0, 7, 0, 11]
+
+Episode 26: return=77.760  len=7  success=1
+  primitives used: [3, 2, 0, 10, 8, 8, 11]
+
+Episode 27: return=77.520  len=7  success=1
+  primitives used: [3, 2, 0, 8, 8, 2, 0]
+
+Episode 28: return=83.000  len=7  success=1
+  primitives used: [8, 2, 3, 8, 7, 8, 0]
+
+Episode 29: return=50.820  len=17  success=1
+  primitives used: [3, 2, 0, 8, 11, 7, 7, 0, 1, 10, 0, 2, 0, 8, 8, 2, 0]
+
+Episode 30: return=81.400  len=11  success=1
+  primitives used: [8, 2, 10, 11, 3, 6, 7, 3, 8, 0, 11]
+
+Episode 31: return=54.550  len=16  success=1
+  primitives used: [3, 2, 0, 8, 8, 1, 0, 2, 10, 0, 8, 5, 8, 0, 8, 8]
+
+Episode 32: return=49.620  len=20  success=1
+  primitives used: [3, 2, 0, 8, 1, 10, 7, 10, 10, 0, 8, 0, 0, 0, 0, 11, 3, 3, 10, 3]
+
+Episode 33: return=53.760  len=6  success=1
+  primitives used: [3, 7, 2, 2, 0, 11]
+
+Episode 34: return=20.160  len=21  success=1
+  primitives used: [3, 2, 0, 8, 1, 10, 3, 10, 1, 10, 10, 0, 10, 3, 4, 0, 3, 3, 2, 0, 0]
+
+Episode 35: return=43.480  len=23  success=1
+  primitives used: [3, 2, 0, 8, 1, 10, 10, 7, 10, 0, 8, 8, 0, 0, 0, 7, 0, 0, 1, 0, 11, 1, 0]
+
+Episode 36: return=89.680  len=8  success=1
+  primitives used: [8, 2, 10, 11, 3, 11, 3, 0]
+
+Episode 37: return=65.010  len=11  success=1
+  primitives used: [3, 2, 0, 1, 7, 10, 0, 2, 1, 5, 1]
+
+Episode 38: return=87.920  len=7  success=1
+  primitives used: [8, 2, 10, 3, 8, 0, 11]
+
+Episode 39: return=83.520  len=8  success=1
+  primitives used: [0, 11, 11, 3, 11, 11, 0, 0]
+
+Episode 40: return=-56.040  len=11  success=0
+  primitives used: [3, 2, 0, 8, 1, 10, 10, 7, 10, 0, 11]
+
+Episode 41: return=85.040  len=10  success=1
+  primitives used: [5, 7, 0, 2, 0, 8, 8, 11, 3, 0]
+
+Episode 42: return=19.320  len=22  success=1
+  primitives used: [3, 2, 0, 8, 1, 10, 3, 10, 10, 1, 10, 0, 0, 11, 3, 0, 0, 0, 8, 8, 1, 0]
+
+Episode 43: return=61.960  len=10  success=1
+  primitives used: [8, 7, 2, 1, 7, 0, 0, 11, 0, 8]
+
+Episode 44: return=91.860  len=4  success=1
+  primitives used: [7, 2, 3, 0]
+
+Episode 45: return=94.380  len=4  success=1
+  primitives used: [10, 8, 2, 3]
+
+Episode 46: return=77.520  len=7  success=1
+  primitives used: [3, 2, 0, 8, 8, 2, 0]
+
+Episode 47: return=54.250  len=7  success=1
+  primitives used: [8, 2, 6, 0, 11, 6, 0]
+
+Episode 48: return=58.470  len=6  success=1
+  primitives used: [8, 2, 2, 3, 0, 8]
+
+Episode 49: return=73.160  len=5  success=1
+  primitives used: [8, 2, 7, 0, 11]
+
+Episode 50: return=44.800  len=14  success=1
+  primitives used: [3, 2, 0, 8, 1, 10, 10, 3, 7, 10, 0, 0, 0, 11]
+
+Episode 51: return=-66.000  len=18  success=0
+  primitives used: [3, 2, 0, 8, 10, 8, 2, 3, 0, 0, 8, 0, 8, 1, 0, 0, 2, 3]
